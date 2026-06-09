@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberGuard AI - Hate Speech & Sentiment Detector</title>
+  <!-- Link stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <h1><i data-lucide="shield-alert" style="width: 36px; height: 36px; display: inline-block; vertical-align: middle; margin-right: 10px; color: var(--accent-cyan);"></i>CyberGuard AI</h1>
+      <p>Analyze text inputs for hate speech patterns and general sentiment using advanced ML Classification.</p>
+    </header>
+
+    <!-- Main Form Card -->
+    <div class="glass-card">
+      <form action="/predict" method="POST">
+        <div class="form-group">
+          <label for="text"><i data-lucide="message-square-code" style="width: 18px; height: 18px; display: inline-block; vertical-align: middle; margin-right: 5px; color: var(--accent-cyan);"></i>Enter Text Payload</label>
+          <textarea id="text" name="text" placeholder="Type or paste sample text here to analyze..." required>{{ text if text else '' }}</textarea>
+        </div>
+        <button type="submit" class="btn-submit">
+          <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+          Analyze Telemetry
+        </button>
+      </form>
+    </div>
+
+    <!-- Prediction Results (If Available) -->
+    {% if result %}
+    <div class="glass-card result-card {{ color }}">
+      <div class="result-badge">{{ result }}</div>
+      
+      <div class="confidence-bar-container">
+         <div class="confidence-bar" style="--confidence: {{ confidence }}%;"></div>
+      </div>
+      
+      <div class="confidence-text">
+        Classification Confidence: <span>{{ confidence }}%</span>
+      </div>
+
+      {% if text %}
+      <div class="original-text">
+        "{{ text }}"
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- History Panel -->
+    <div class="history-section">
+      <h2><i data-lucide="history" style="width: 20px; height: 20px; color: var(--accent-purple); display: inline-block; vertical-align: middle; margin-right: 5px;"></i>Analysis Stream Logs</h2>
+      
+      <div class="history-list">
+        {% if history %}
+          {% for item in history %}
+          <div class="history-item">
+            <div class="history-text" title="{{ item.text }}">
+              "{{ item.text }}"
+            </div>
+            <div class="history-meta">
+              <span class="history-badge {{ item.color }}">{{ item.result }}</span>
+              <span class="history-confidence"><i data-lucide="activity" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 3px;"></i>{{ item.confidence }}%</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="history-item" style="justify-content: center; color: var(--text-muted); font-style: italic;">
+            No records in the active stream log.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
