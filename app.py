@@ -2,7 +2,8 @@ import os
 from flask import Flask, request, render_template
 import joblib
 
-app = Flask(__name__)
+# Configure Flask to search for templates and static files in the current folder (flat structure)
+app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='')
 
 # Load the trained model pipeline
 model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sentiment_model.pkl')
